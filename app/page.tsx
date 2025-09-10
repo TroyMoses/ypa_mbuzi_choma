@@ -22,7 +22,7 @@ export default function HomePage() {
 
   const heroSlides = [
     {
-      image: "/african-restaurant-grilled-meat-fire.jpg",
+      image: "/banner/1.jpg",
       title: "YPA Mbuzi Choma",
       subtitle:
         "Experience the finest grilled goat and authentic African cuisine in the heart of Uganda",
@@ -30,15 +30,15 @@ export default function HomePage() {
       secondaryButton: { text: "Book Table", href: "/booking" },
     },
     {
-      image: "/grilled-goat-meat-african-spices.jpg",
-      title: "Authentic African Flavors",
+      image: "/banner/3.jpg",
+      title: "African Flavors",
       subtitle:
         "Traditional recipes passed down through generations, prepared with the finest local ingredients",
       primaryButton: { text: "Our Story", href: "/about" },
       secondaryButton: { text: "View Gallery", href: "/gallery" },
     },
     {
-      image: "/african-chef-grilling-meat-traditional-kitchen.jpg",
+      image: "/home/1.jpg",
       title: "Master Chefs at Work",
       subtitle:
         "Watch our skilled chefs prepare your meal using traditional grilling techniques over open flames",
@@ -49,23 +49,26 @@ export default function HomePage() {
 
   const featuredDishes = [
     {
+      id: "1",
       name: "Signature Mbuzi Choma",
       description:
         "Tender grilled goat meat marinated in traditional African spices",
-      price: "UGX 1,200",
-      image: "/grilled-goat-meat-african-spices.jpg",
+      price: "UGX 25,000",
+      image: "/banner/1.jpg",
     },
     {
+      id: "2",
       name: "Nyama Choma Platter",
       description: "Mixed grill featuring goat, beef, and chicken with ugali",
-      price: "UGX 1,800",
-      image: "/mixed-grill-platter-ugali-african.jpg",
+      price: "UGX 18,000",
+      image: "/banner/2.jpg",
     },
     {
+      id: "3",
       name: "Goat Curry",
       description: "Slow-cooked goat in rich coconut curry sauce",
-      price: "UGX 1,000",
-      image: "/goat-curry-coconut-sauce-african.jpg",
+      price: "UGX 12,000",
+      image: "/signature/4.jpg",
     },
   ];
 
@@ -122,7 +125,7 @@ export default function HomePage() {
             </div>
             <div data-aos="fade-left">
               <img
-                src="/african-chef-grilling-meat-traditional-kitchen.jpg"
+                src="/home/2.jpg"
                 alt="Chef preparing mbuzi choma"
                 className="rounded-lg shadow-lg w-full h-auto"
               />
@@ -145,8 +148,8 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {featuredDishes.map((dish, index) => (
+              <Link key={dish.id} href={`/menu/${dish.id}`}>
               <Card
-                key={index}
                 className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
@@ -175,6 +178,7 @@ export default function HomePage() {
                   </div>
                 </CardContent>
               </Card>
+              </Link>
             ))}
           </div>
           <div className="text-center mt-8 sm:mt-12" data-aos="fade-up">
