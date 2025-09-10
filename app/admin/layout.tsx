@@ -1,6 +1,4 @@
 import type React from "react";
-import { redirect } from "next/navigation";
-import { verifyAuth } from "@/lib/auth";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 
 export default async function AdminLayout({
@@ -8,10 +6,11 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await verifyAuth();
+  // Check if this is the login page
+  const isLoginPage = children?.props?.segment === "login";
 
-  if (!user) {
-    redirect("/admin/login");
+  if (isLoginPage) {
+    return <>{children}</>;
   }
 
   return <AdminSidebar>{children}</AdminSidebar>;

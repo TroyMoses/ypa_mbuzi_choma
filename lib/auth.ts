@@ -46,27 +46,27 @@ export async function verifyAuth(): Promise<AdminUser | null> {
     return TEST_CREDENTIALS.user;
   }
 
-  try {
-    const response = await fetch(
-      `${process.env.FASTAPI_BASE_URL}/auth/verify`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+  if (process.env.FASTAPI_BASE_URL) {
+    try {
+      const response = await fetch(
+        `${process.env.FASTAPI_BASE_URL}/auth/verify`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        return await response.json();
       }
-    );
-
-    if (!response.ok) return null;
-
-    return await response.json();
-  } catch (error) {
-    console.error("Auth verification failed:", error);
-    if (token === "test-token") {
-      return TEST_CREDENTIALS.user;
+    } catch (error) {
+      console.error("FastAPI auth verification failed:", error);
     }
-    return null;
   }
+
+  return null;
 }
 
 export async function loginWithTestCredentials(
