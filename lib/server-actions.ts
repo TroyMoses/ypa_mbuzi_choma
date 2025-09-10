@@ -3,11 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { apiPost } from "./api";
-import {
-  setAuthToken,
-  removeAuthToken,
-  loginWithTestCredentials,
-} from "./auth";
 
 function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,31 +26,15 @@ export async function loginAction(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  try {
-    // Try backend authentication first
-    const response = await apiPost<{ access_token: string; user: any }>(
-      "/auth/login",
-      {
-        email,
-        password,
-      }
-    );
-
-    await setAuthToken(response.access_token);
+  if (email === "admin@ypambuzi.com" && password === "admin123") {
     redirect("/admin");
-  } catch (error) {
-    // Fallback to test credentials if backend fails
-    const testLogin = await loginWithTestCredentials(email, password);
-    if (testLogin.success) {
-      redirect("/admin");
-    } else {
-      throw new Error("Invalid credentials");
-    }
   }
+
+  // If we reach here, authentication failed
+  throw new Error("Invalid credentials");
 }
 
 export async function logoutAction() {
-  await removeAuthToken();
   redirect("/admin/login");
 }
 
