@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Link from "next/link";
 
 const menuCategories = [
   "All",
@@ -24,12 +25,12 @@ const menuCategories = [
 const menuItems = [
   {
     id: "1",
-    name: "Signature Mbuzi Choma",
+    name: "Mbuzi Choma",
     description:
-      "Tender grilled goat meat marinated in traditional African spices, served with ugali and sukuma wiki",
-    price: 1200,
+      "Tender grilled goat meat marinated in traditional African spices, served with ugali",
+    price: 18000,
     category: "Grilled Specialties",
-    image: "/grilled-goat-meat-african-spices.jpg",
+    image: "/banner/1.jpg",
     isPopular: true,
     isSpicy: true,
   },
@@ -38,9 +39,9 @@ const menuItems = [
     name: "Nyama Choma Platter",
     description:
       "Mixed grill featuring goat, beef, and chicken with traditional accompaniments",
-    price: 1800,
+    price: 12000,
     category: "Grilled Specialties",
-    image: "/mixed-grill-platter-ugali-african.jpg",
+    image: "/banner/2.jpg",
     isPopular: true,
   },
   {
@@ -48,43 +49,10 @@ const menuItems = [
     name: "Goat Curry",
     description:
       "Slow-cooked goat in rich coconut curry sauce with aromatic spices",
-    price: 1000,
+    price: 12000,
     category: "Traditional Dishes",
-    image: "/goat-curry-coconut-sauce-african.jpg",
+    image: "/signature/4.jpg",
     isSpicy: true,
-  },
-  {
-    id: "4",
-    name: "Beef Stew (Mchuzi wa Nyama)",
-    description:
-      "Traditional beef stew cooked with tomatoes, onions, and local spices",
-    price: 800,
-    category: "Traditional Dishes",
-    image: "/african-beef-stew-tomatoes.jpg",
-  },
-  {
-    id: "5",
-    name: "Grilled Tilapia",
-    description: "Fresh tilapia grilled to perfection with lemon and herbs",
-    price: 900,
-    category: "Grilled Specialties",
-    image: "/grilled-tilapia-fish-lemon-herbs.jpg",
-  },
-  {
-    id: "6",
-    name: "Ugali",
-    description: "Traditional cornmeal staple, perfect with any main dish",
-    price: 150,
-    category: "Sides",
-    image: "/ugali-cornmeal-african-staple.jpg",
-  },
-  {
-    id: "7",
-    name: "Sukuma Wiki",
-    description: "Sautéed collard greens with onions and tomatoes",
-    price: 200,
-    category: "Sides",
-    image: "/sukuma-wiki-collard-greens-african.jpg",
   },
 ];
 
@@ -172,48 +140,49 @@ export default function MenuPage() {
           {/* Menu Items Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredItems.map((item, index) => (
-              <Card
-                key={item.id}
-                className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                data-aos="fade-up"
-                data-aos-delay={index * 50}
-              >
-                <div className="aspect-[4/3] overflow-hidden relative">
-                  <img
-                    src={item.image || "/placeholder.svg"}
-                    alt={item.name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-2 left-2 flex gap-2">
-                    {item.isPopular && (
-                      <Badge className="bg-secondary text-secondary-foreground text-xs">
-                        Popular
-                      </Badge>
-                    )}
-                    {item.isSpicy && (
-                      <Badge variant="destructive" className="text-xs">
-                        Spicy
-                      </Badge>
-                    )}
+              <Link key={item.id} href={`/menu/${item.id}`}>
+                <Card
+                  className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 50}
+                >
+                  <div className="aspect-[4/3] overflow-hidden relative">
+                    <img
+                      src={item.image || "/placeholder.svg"}
+                      alt={item.name}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-2 left-2 flex gap-2">
+                      {item.isPopular && (
+                        <Badge className="bg-secondary text-secondary-foreground text-xs">
+                          Popular
+                        </Badge>
+                      )}
+                      {item.isSpicy && (
+                        <Badge variant="destructive" className="text-xs">
+                          Spicy
+                        </Badge>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <CardContent className="p-4 sm:p-6">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-semibold text-lg sm:text-xl font-[family-name:var(--font-space-grotesk)]">
-                      {item.name}
-                    </h3>
-                    <span className="font-bold text-base sm:text-lg text-primary">
-                      UGX {item.price.toLocaleString()}
-                    </span>
-                  </div>
-                  <p className="text-sm sm:text-base text-muted-foreground mb-4 text-pretty">
-                    {item.description}
-                  </p>
-                  <Button className="w-full cursor-pointer text-sm sm:text-base">
-                    Add to Order
-                  </Button>
-                </CardContent>
-              </Card>
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold text-lg sm:text-xl font-[family-name:var(--font-space-grotesk)]">
+                        {item.name}
+                      </h3>
+                      <span className="font-bold text-base sm:text-lg text-primary">
+                        UGX {item.price.toLocaleString()}
+                      </span>
+                    </div>
+                    <p className="text-sm sm:text-base text-muted-foreground mb-4 text-pretty">
+                      {item.description}
+                    </p>
+                    <Button className="w-full cursor-pointer text-sm sm:text-base">
+                      View Details
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
 
