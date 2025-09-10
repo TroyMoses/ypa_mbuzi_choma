@@ -4,6 +4,7 @@ import { Space_Grotesk, DM_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { FloatingButtons } from "@/components/floating-buttons";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <Suspense fallback={null}>{children}</Suspense>
         <Toaster position="top-right" richColors />
+        <FloatingButtons />
         <Analytics />
       </body>
     </html>
