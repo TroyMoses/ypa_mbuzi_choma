@@ -29,10 +29,7 @@ const menuItems = [
     category: "Grilled Specialties",
     image: "/banner/1.jpg",
     gallery: [
-      "/grilled-goat-meat-african-spices.jpg",
-      "/african-man-grill-master-chef.jpg",
-      "/african-restaurant-grilled-meat-fire.jpg",
-      "/african-chef-grilling-meat-traditional-kitchen.jpg",
+      "/banner/1.jpg",
     ],
     isPopular: true,
     isSpicy: true,
@@ -62,9 +59,7 @@ const menuItems = [
     category: "Grilled Specialties",
     image: "/banner/2.jpg",
     gallery: [
-      "/mixed-grill-platter-ugali-african.jpg",
-      "/african-restaurant-grilled-meat-fire.jpg",
-      "/african-chef-grilling-meat-traditional-kitchen.jpg",
+      "/banner/2.jpg",
     ],
     isPopular: true,
     ingredients: [
@@ -94,8 +89,7 @@ const menuItems = [
     category: "Traditional Dishes",
     image: "/signature/4.jpg",
     gallery: [
-      "/goat-curry-coconut-sauce-african.jpg",
-      "/african-beef-stew-tomatoes.jpg",
+      "/signature/4.jpg",
     ],
     isSpicy: true,
     ingredients: [
