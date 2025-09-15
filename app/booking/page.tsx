@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
@@ -23,16 +23,11 @@ import { createBookingAction } from "@/lib/server-actions";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
+const initialState = null;
 
+function SubmitButton({ pending }: { pending: boolean }) {
   return (
-    <Button
-      type="submit"
-      className="w-full cursor-pointer"
-      size="lg"
-      disabled={pending}
-    >
+    <Button type="submit" className="w-full cursor-pointer" disabled={pending}>
       {pending ? (
         <>
           <LoadingSpinner className="mr-2 h-4 w-4" />
@@ -45,8 +40,15 @@ function SubmitButton() {
   );
 }
 
+function createBookingReducer(
+  prevState: any,
+  formData: FormData
+) {
+  return createBookingAction(formData);
+}
+
 export default function BookingPage() {
-  const [state, formAction] = useFormState(createBookingAction, null);
+  const [state, formAction] = useFormState(createBookingReducer, initialState);
   const [formKey, setFormKey] = useState(0);
 
   useEffect(() => {
@@ -292,7 +294,7 @@ export default function BookingPage() {
                     />
                   </div>
 
-                  <SubmitButton />
+                  <SubmitButton pending={false} />
                 </form>
               </CardContent>
             </Card>
