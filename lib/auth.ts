@@ -1,93 +1,128 @@
-import { cookies } from "next/headers";
-
-export interface AdminUser {
-  id: string;
-  email: string;
+export interface User {
+  id: number;
+  username: string;
+  email?: string;
   name: string;
-  role: "admin" | "super_admin";
+  role: "finance" | "records" | "director";
+  token: string;
+  is_admin: boolean;
 }
 
-const TEST_CREDENTIALS = {
-  email: "admin@ypambuzi.com",
-  password: "admin123",
-  user: {
-    id: "test-admin-1",
-    email: "admin@ypambuzi.com",
-    name: "YPA Admin",
-    role: "admin" as const,
-  },
-};
-
-export async function getAuthToken(): Promise<string | null> {
-  const cookieStore = await cookies();
-  return cookieStore.get("auth_token")?.value || null;
+export interface AuthState {
+  user: User | null;
+  isLoading: boolean;
+  error: string | null;
 }
 
-export async function setAuthToken(token: string) {
-  const cookieStore = await cookies();
-  cookieStore.set("auth_token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-  });
-}
+// API base URL - FastAPI backend URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-export async function removeAuthToken() {
-  const cookieStore = await cookies();
-  cookieStore.delete("auth_token");
-}
+export class AuthService {
+  static async login(username: string, password: string): Promise<User> {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
 
-export async function verifyAuth(): Promise<AdminUser | null> {
-  const token = await getAuthToken();
-  if (!token) return null;
-
-  if (token === "test-token") {
-    return TEST_CREDENTIALS.user;
-  }
-
-  if (process.env.FASTAPI_BASE_URL) {
-    try {
-      const response = await fetch(
-        `${process.env.FASTAPI_BASE_URL}/auth/verify`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        return await response.json();
-      }
-    } catch (error) {
-      console.error("FastAPI auth verification failed:", error);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || "Invalid credentials");
     }
-  }
 
-  return null;
-}
+    const data = await response.json();
 
-export async function loginWithTestCredentials(
-  email: string,
-  password: string
-): Promise<{ success: boolean; token?: string; user?: AdminUser }> {
-  if (
-    email === TEST_CREDENTIALS.email &&
-    password === TEST_CREDENTIALS.password
-  ) {
-    await setAuthToken("test-token");
-    return {
-      success: true,
-      token: "test-token",
-      user: TEST_CREDENTIALS.user,
+    const user: User = {
+      id: data.user.id,
+      username: data.user.username,
+      email: data.user.email,
+      name: data.user.username,
+      role: data.user.role,
+      token: data.token,
+      is_admin: data.user.is_admin,
     };
-  }
-  return { success: false };
-}
 
-export const getTestCredentials = () => ({
-  email: TEST_CREDENTIALS.email,
-  password: TEST_CREDENTIALS.password,
-});
+    this.setUserData(user);
+
+    return user;
+  }
+
+  static async logout(): Promise<void> {
+    this.removeToken();
+  }
+
+  static async verifyToken(token: string): Promise<User> {
+    const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+      method: "GET",
+      headers: {
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || "Invalid token");
+    }
+
+    const data = await response.json();
+
+    const user: User = {
+      id: data.id,
+      username: data.username,
+      email: data.email,
+      name: `${data.first_name} ${data.last_name}`.trim() || data.username,
+      role: data.role,
+      token: token,
+      is_admin: data.is_admin || false,
+    };
+
+    return user;
+  }
+
+  static setToken(token: string): void {
+    // Set cookie for middleware access
+    document.cookie = `auth-token=${token}; path=/; max-age=${
+      7 * 24 * 60 * 60
+    }; secure; samesite=strict`;
+  }
+
+  static setUserData(user: User): void {
+    // Set token cookie for middleware access
+    document.cookie = `auth-token=${user.token}; path=/; max-age=${
+      7 * 24 * 60 * 60
+    }; secure; samesite=strict`;
+
+    // Store user object in secure cookie
+    const userData = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      is_admin: user.is_admin,
+    };
+    document.cookie = `user-data=${encodeURIComponent(
+      JSON.stringify(userData)
+    )}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
+  }
+
+  static getToken(): string | null {
+    if (typeof document === "undefined") return null;
+
+    const cookies = document.cookie.split(";");
+    const authCookie = cookies.find((cookie) =>
+      cookie.trim().startsWith("auth-token=")
+    );
+    return authCookie ? authCookie.split("=")[1] : null;
+  }
+
+  static removeToken(): void {
+    // Clear cookie
+    document.cookie =
+      "auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie =
+      "user-data=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  }
+}
