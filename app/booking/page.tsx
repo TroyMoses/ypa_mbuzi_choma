@@ -41,7 +41,7 @@ function SubmitButton({ pending }: { pending: boolean }) {
 }
 
 function createBookingReducer(
-  prevState: any,
+  prevState: unknown,
   formData: FormData
 ) {
   return createBookingAction(formData);

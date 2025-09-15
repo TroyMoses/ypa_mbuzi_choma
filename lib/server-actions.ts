@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { getAuthData } from "./authtoken";
 
 const FASTAPI_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -215,10 +214,6 @@ export async function submitContactAction(formData: FormData) {
 
 export async function submitReviewAction(formData: FormData) {
   try {
-    const authData = await getAuthData();
-    if (!authData) {
-      return { success: false, error: "Authentication required" };
-    }
 
     const reviewData = {
       customer_name: formData.get("customer_name") as string,
@@ -231,9 +226,6 @@ export async function submitReviewAction(formData: FormData) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        token: authData.token,
-        role: authData.role,
-        is_admin: authData.is_admin.toString(),
       },
       body: JSON.stringify(reviewData),
     });
