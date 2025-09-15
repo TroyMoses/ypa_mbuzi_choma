@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, StarIcon } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Image from "next/image";
 
 // Mock data - same as in menu page but with additional images for gallery
 const menuItems = [
@@ -218,7 +219,9 @@ export default function MenuItemDetailPage() {
           {/* Image Gallery */}
           <div className="space-y-4" data-aos="fade-right">
             <div className="aspect-square overflow-hidden rounded-lg">
-              <img
+              <Image
+                height={400}
+                width={500}
                 src={menuItem.gallery[selectedImage] || "/placeholder.svg"}
                 alt={menuItem.name}
                 className="w-full h-full object-cover"
@@ -235,7 +238,9 @@ export default function MenuItemDetailPage() {
                       : "border-transparent"
                   }`}
                 >
-                  <img
+                  <Image
+                    height={100}
+                    width={100}
                     src={image || "/placeholder.svg"}
                     alt={`${menuItem.name} ${index + 1}`}
                     className="w-full h-full object-cover"
@@ -290,9 +295,9 @@ export default function MenuItemDetailPage() {
               </div>
             </div>
 
-            <Button size="lg" className="w-full">
+            {/* <Button size="lg" className="w-full">
               Add to Order - UGX {menuItem.price.toLocaleString()}
-            </Button>
+            </Button> */}
           </div>
         </div>
 
