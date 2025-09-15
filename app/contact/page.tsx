@@ -7,34 +7,18 @@ import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { HeroSlider } from "@/components/hero-slider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { submitContactAction } from "@/lib/server-actions";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { SubmitButtonContact } from "@/components/submit-button-contact";
 
 const initialState = null;
 
-function SubmitButton({ pending }: { pending: boolean }) {
-  return (
-    <Button type="submit" className="w-full cursor-pointer" disabled={pending}>
-      {pending ? (
-        <>
-          <LoadingSpinner className="mr-2 h-4 w-4" />
-          Sending...
-        </>
-      ) : (
-        "Send Message"
-      )}
-    </Button>
-  );
-}
-
 function submitContactReducer(
-  prevState: any,
+  prevState: unknown,
   formData: FormData
 ) {
   return submitContactAction(formData);
@@ -214,7 +198,7 @@ export default function ContactPage() {
                         className="cursor-pointer"
                       />
                     </div>
-                    <SubmitButton pending={false} />
+                    <SubmitButtonContact />
                   </form>
                 </CardContent>
               </Card>
@@ -257,7 +241,7 @@ export default function ContactPage() {
               Find Us
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground text-pretty">
-              Located in the heart of Uganda, we're easy to find and always
+              Located in the heart of Uganda, we&apos;re easy to find and always
               ready to welcome you
             </p>
           </div>
