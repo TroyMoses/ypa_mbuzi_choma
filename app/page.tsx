@@ -10,6 +10,7 @@ import { HeroSlider } from "@/components/hero-slider";
 import { Star, Users, Clock, Award } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Image from "next/image";
 
 export default function HomePage() {
   useEffect(() => {
@@ -124,7 +125,9 @@ export default function HomePage() {
               </Button>
             </div>
             <div data-aos="fade-left">
-              <img
+              <Image
+                height={500}
+                width={500}
                 src="/home/2.jpg"
                 alt="Chef preparing mbuzi choma"
                 className="rounded-lg shadow-lg w-full h-auto"
@@ -155,7 +158,9 @@ export default function HomePage() {
                 data-aos-delay={index * 100}
               >
                 <div className="aspect-[4/3] overflow-hidden">
-                  <img
+                  <Image
+                    height={300}
+                    width={300}
                     src={dish.image || "/placeholder.svg"}
                     alt={dish.name}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -172,9 +177,9 @@ export default function HomePage() {
                     <span className="font-bold text-base sm:text-lg text-primary">
                       {dish.price}
                     </span>
-                    <Button size="sm" className="cursor-pointer text-sm">
+                    {/* <Button size="sm" className="cursor-pointer text-sm">
                       Order Now
-                    </Button>
+                    </Button> */}
                   </div>
                 </CardContent>
               </Card>
@@ -241,7 +246,7 @@ export default function HomePage() {
               What Our Customers Say
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
-              Don't just take our word for it - hear from our satisfied
+              Don&apos;t just take our word for it - hear from our satisfied
               customers
             </p>
           </div>
@@ -263,7 +268,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <p className="text-sm sm:text-base text-muted-foreground mb-4 text-pretty">
-                    "{testimonial.comment}"
+                    &quot;{testimonial.comment}&quot;
                   </p>
                   <div className="font-semibold text-sm sm:text-base">
                     {testimonial.name}
