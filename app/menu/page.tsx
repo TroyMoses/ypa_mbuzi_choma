@@ -12,6 +12,7 @@ import { Search } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Link from "next/link";
+import Image from "next/image";
 
 const menuCategories = [
   "All",
@@ -147,7 +148,8 @@ export default function MenuPage() {
                   data-aos-delay={index * 50}
                 >
                   <div className="aspect-[4/3] overflow-hidden relative">
-                    <img
+                    <Image
+                      fill
                       src={item.image || "/placeholder.svg"}
                       alt={item.name}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"

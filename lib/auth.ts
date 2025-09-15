@@ -18,13 +18,13 @@ export interface AuthState {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://ypa-mbuzi-choma-backend.onrender.com"
 
 export class AuthService {
-  static async login(email: string, password: string): Promise<User> {
+  static async login(username: string, password: string): Promise<User> {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }), // Changed from username to email
+      body: JSON.stringify({ username, password }),
     })
 
     if (!response.ok) {
@@ -36,7 +36,7 @@ export class AuthService {
 
     const user: User = {
       id: data.user.id,
-      username: data.user.username || data.user.email, // Fallback to email if no username
+      username: data.user.username || data.user.email,
       email: data.user.email,
       name: data.user.name || data.user.username || data.user.email,
       role: data.user.role,
@@ -57,7 +57,7 @@ export class AuthService {
     const response = await fetch(`${API_BASE_URL}/auth/verify`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Updated to use Bearer token format
+        token: token,
       },
     })
 

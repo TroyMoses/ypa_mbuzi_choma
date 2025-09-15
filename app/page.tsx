@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { HeroSlider } from "@/components/hero-slider";
-import { Star, Users, Clock, Award } from "lucide-react";
+import { Star, Users, Clock, Award, MapPin, ExternalLink } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from "next/image";
@@ -70,6 +70,33 @@ export default function HomePage() {
       description: "Slow-cooked goat in rich coconut curry sauce",
       price: "UGX 12,000",
       image: "/signature/4.jpg",
+    },
+  ];
+
+  const branches = [
+    {
+      name: "Gomba Branch",
+      location: "Gomba District",
+      image: "/restaurant-exterior-gomba-uganda.jpg",
+      subdomain: "https://gomba.ypambuzichoma.com",
+    },
+    {
+      name: "Masaka Branch",
+      location: "Masaka City",
+      image: "/modern-restaurant-masaka-uganda.jpg",
+      subdomain: "https://masaka.ypambuzichoma.com",
+    },
+    {
+      name: "Nansana Branch",
+      location: "Nansana, Wakiso",
+      image: "/restaurant-nansana-kampala-uganda.jpg",
+      subdomain: "https://nansana.ypambuzichoma.com",
+    },
+    {
+      name: "Mbarara Branch",
+      location: "Mbarara City",
+      image: "/restaurant-mbarara-western-uganda.jpg",
+      subdomain: "https://mbarara.ypambuzichoma.com",
     },
   ];
 
@@ -152,43 +179,107 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {featuredDishes.map((dish, index) => (
               <Link key={dish.id} href={`/menu/${dish.id}`}>
-              <Card
-                className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
-              >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <Image
-                    height={300}
-                    width={300}
-                    src={dish.image || "/placeholder.svg"}
-                    alt={dish.name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <CardContent className="p-4 sm:p-6">
-                  <h3 className="font-semibold text-lg sm:text-xl font-[family-name:var(--font-space-grotesk)] mb-2">
-                    {dish.name}
-                  </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground mb-4 text-pretty">
-                    {dish.description}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-base sm:text-lg text-primary">
-                      {dish.price}
-                    </span>
-                    {/* <Button size="sm" className="cursor-pointer text-sm">
+                <Card
+                  className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <Image
+                      height={300}
+                      width={300}
+                      src={dish.image || "/placeholder.svg"}
+                      alt={dish.name}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <CardContent className="p-4 sm:p-6">
+                    <h3 className="font-semibold text-lg sm:text-xl font-[family-name:var(--font-space-grotesk)] mb-2">
+                      {dish.name}
+                    </h3>
+                    <p className="text-sm sm:text-base text-muted-foreground mb-4 text-pretty">
+                      {dish.description}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-base sm:text-lg text-primary">
+                        {dish.price}
+                      </span>
+                      {/* <Button size="sm" className="cursor-pointer text-sm">
                       Order Now
                     </Button> */}
-                  </div>
-                </CardContent>
-              </Card>
+                    </div>
+                  </CardContent>
+                </Card>
               </Link>
             ))}
           </div>
           <div className="text-center mt-8 sm:mt-12" data-aos="fade-up">
             <Button asChild size="lg" className="cursor-pointer">
               <Link href="/menu">View Full Menu</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Branches Section */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8 sm:mb-12" data-aos="fade-up">
+            <h2 className="font-bold text-3xl sm:text-4xl font-[family-name:var(--font-space-grotesk)] mb-4 text-balance">
+              Our Branches Across Uganda
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
+              Experience the authentic taste of YPA Mbuzi Choma at any of our
+              convenient locations
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {branches.map((branch, index) => (
+              <Card
+                key={index}
+                className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group"
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+              >
+                <div className="aspect-[4/3] overflow-hidden">
+                  <Image
+                    height={200}
+                    width={300}
+                    src={branch.image || "/placeholder.svg"}
+                    alt={branch.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <CardContent className="p-4">
+                  <h3 className="font-semibold text-lg font-[family-name:var(--font-space-grotesk)] mb-2">
+                    {branch.name}
+                  </h3>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground mb-3">
+                    <MapPin className="h-4 w-4" />
+                    <span>{branch.location}</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full cursor-pointer"
+                    asChild
+                  >
+                    <Link
+                      href={branch.subdomain}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Visit Site
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="text-center mt-8 sm:mt-12" data-aos="fade-up">
+            <Button asChild size="lg" className="cursor-pointer">
+              <Link href="/branches">Learn More About Our Branches</Link>
             </Button>
           </div>
         </div>

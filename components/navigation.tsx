@@ -14,6 +14,7 @@ export function Navigation() {
     { href: "/", label: "Home" },
     { href: "/menu", label: "Menu" },
     { href: "/about", label: "About" },
+    { href: "/branches", label: "Branches" },
     { href: "/gallery", label: "Gallery" },
     { href: "/contact", label: "Contact" },
   ];
@@ -54,7 +55,9 @@ export function Navigation() {
           {/* Logo */}
           <Link href="/" className="cursor-pointer">
             <div className="font-bold text-xl sm:text-2xl font-[family-name:var(--font-space-grotesk)] text-primary">
-              <span className="hidden sm:inline">YPA Mbuzi Choma Restaurant</span>
+              <span className="hidden sm:inline">
+                YPA Mbuzi Choma Restaurant
+              </span>
               <span className="sm:hidden">YPA</span>
             </div>
           </Link>

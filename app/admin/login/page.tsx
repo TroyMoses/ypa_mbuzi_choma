@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { Lock, User } from "lucide-react";
 
 export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   async function handleSubmit(formData: FormData) {
     setIsLoading(true);
@@ -18,7 +20,13 @@ export default function AdminLoginPage() {
     try {
       await loginAction(formData);
       toast.success("Login successful! Redirecting to dashboard...");
-    } catch (err) {
+
+      // Small delay to ensure cookies are set
+      setTimeout(() => {
+        router.push("/admin");
+        router.refresh();
+      }, 500);
+    } catch {
       toast.error("Invalid credentials. Please try again.");
     } finally {
       setIsLoading(false);
@@ -26,34 +34,37 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Lock className="h-6 w-6 text-primary" />
+          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center">
+            <Lock className="h-6 w-6 text-orange-600" />
           </div>
-          <CardTitle className="font-[family-name:var(--font-space-grotesk)] text-2xl">
+          <CardTitle className="text-2xl font-bold text-gray-900">
             YPA Admin Login
           </CardTitle>
-          <p className="text-muted-foreground">
+          <p className="text-gray-600">
             Access the restaurant management system
           </p>
         </CardHeader>
         <CardContent>
           <form action={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium mb-2 text-gray-700"
+              >
                 Email Address
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
                   id="email"
                   name="email"
                   type="email"
                   required
                   placeholder="admin@ypambuzi.com"
-                  className="pl-10 cursor-pointer"
+                  className="pl-10"
                   disabled={isLoading}
                 />
               </div>
@@ -61,19 +72,19 @@ export default function AdminLoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium mb-2"
+                className="block text-sm font-medium mb-2 text-gray-700"
               >
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
                   name="password"
                   type="password"
                   required
                   placeholder="Enter your password"
-                  className="pl-10 cursor-pointer"
+                  className="pl-10"
                   disabled={isLoading}
                 />
               </div>
@@ -81,7 +92,7 @@ export default function AdminLoginPage() {
 
             <Button
               type="submit"
-              className="w-full cursor-pointer"
+              className="w-full bg-orange-600 hover:bg-orange-700"
               disabled={isLoading}
             >
               {isLoading ? (

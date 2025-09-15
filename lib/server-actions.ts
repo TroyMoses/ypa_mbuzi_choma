@@ -40,6 +40,8 @@ export async function loginAction(formData: FormData) {
       throw new Error("Access denied. Admin privileges required.");
     }
 
+    console.log("[v0] Login successful for user:", user.email);
+
     // Set cookies server-side
     const cookieStore = await cookies();
 
@@ -70,7 +72,9 @@ export async function loginAction(formData: FormData) {
       httpOnly: false, // Allow client-side access
     });
 
-    redirect("/admin");
+    console.log("[v0] Cookies set successfully");
+
+    return { success: true, message: "Login successful" };
   } catch (error) {
     console.error("Login error:", error);
     throw new Error(
