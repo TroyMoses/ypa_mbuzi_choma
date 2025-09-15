@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAuthData } from "./authtoken";
 
-const FASTAPI_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const FASTAPI_URL = process.env.NEXT_PUBLIC_API_URL || "https://ypa-mbuzi-choma-backend.onrender.com";
 
 function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -131,7 +131,7 @@ export async function createBookingAction(formData: FormData) {
       message:
         "Booking request submitted successfully! We'll confirm your reservation within 2 hours during business hours.",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating booking:", error);
     return {
       success: false,
@@ -220,7 +220,7 @@ export async function submitContactAction(formData: FormData) {
       message:
         "Thank you for your message! We'll get back to you within 24 hours.",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Contact form error:", error);
     return {
       success: false,
@@ -264,7 +264,7 @@ export async function submitReviewAction(formData: FormData) {
 
     const review = await response.json();
     return { success: true, review, message: "Thank you for your review!" };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error submitting review:", error);
     return {
       success: false,

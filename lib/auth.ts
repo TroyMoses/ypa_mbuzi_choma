@@ -15,7 +15,7 @@ export interface AuthState {
 }
 
 // API base URL - FastAPI backend URL
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://ypa-mbuzi-choma-backend.onrender.com";
 
 export class AuthService {
   static async login(username: string, password: string): Promise<User> {
