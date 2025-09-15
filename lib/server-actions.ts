@@ -4,7 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAuthData } from "./authtoken";
 
-const FASTAPI_URL = process.env.NEXT_PUBLIC_API_URL || "https://ypa-mbuzi-choma-backend.onrender.com";
+const FASTAPI_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://ypa-mbuzi-choma-backend.onrender.com";
 
 function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,11 +44,6 @@ export async function logoutAction() {
 
 export async function createBookingAction(formData: FormData) {
   try {
-    const authData = await getAuthData();
-    if (!authData) {
-      return { success: false, error: "Authentication required" };
-    }
-
     const customer_name = formData.get("customer_name") as string;
     const customer_email = formData.get("customer_email") as string;
     const customer_phone = formData.get("customer_phone") as string;
@@ -108,9 +105,6 @@ export async function createBookingAction(formData: FormData) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        token: authData.token,
-        role: authData.role,
-        is_admin: authData.is_admin.toString(),
       },
       body: JSON.stringify(bookingData),
     });
@@ -143,7 +137,6 @@ export async function createBookingAction(formData: FormData) {
 
 export async function submitContactAction(formData: FormData) {
   try {
-
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const phone = formData.get("phone") as string;
