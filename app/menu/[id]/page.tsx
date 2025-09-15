@@ -16,6 +16,8 @@ import { ArrowLeft, StarIcon } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from "next/image";
+import { submitReviewAction } from "@/lib/server-actions";
+import { toast } from "sonner";
 
 // Mock data - same as in menu page but with additional images for gallery
 const menuItems = [
@@ -29,9 +31,7 @@ const menuItems = [
     price: 25000,
     category: "Grilled Specialties",
     image: "/banner/1.jpg",
-    gallery: [
-      "/banner/1.jpg",
-    ],
+    gallery: ["/banner/1.jpg"],
     isPopular: true,
     isSpicy: true,
     ingredients: [
@@ -59,9 +59,7 @@ const menuItems = [
     price: 18000,
     category: "Grilled Specialties",
     image: "/banner/2.jpg",
-    gallery: [
-      "/banner/2.jpg",
-    ],
+    gallery: ["/banner/2.jpg"],
     isPopular: true,
     ingredients: [
       "Goat meat",
@@ -89,9 +87,7 @@ const menuItems = [
     price: 1000,
     category: "Traditional Dishes",
     image: "/signature/4.jpg",
-    gallery: [
-      "/signature/4.jpg",
-    ],
+    gallery: ["/signature/4.jpg"],
     isSpicy: true,
     ingredients: [
       "Goat meat",
@@ -145,9 +141,11 @@ export default function MenuItemDetailPage() {
   const [reviews, setReviews] = useState(mockReviews);
   const [newReview, setNewReview] = useState({
     customerName: "",
+    customerEmail: "",
     rating: 5,
     comment: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const menuItem = menuItems.find((item) => item.id === params.id);
 
@@ -175,16 +173,58 @@ export default function MenuItemDetailPage() {
     );
   }
 
-  const handleSubmitReview = (e: React.FormEvent) => {
+  const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newReview.customerName && newReview.comment) {
-      const review = {
-        id: Date.now().toString(),
-        ...newReview,
-        date: new Date().toISOString().split("T")[0],
-      };
-      setReviews([review, ...reviews]);
-      setNewReview({ customerName: "", rating: 5, comment: "" });
+
+    if (
+      !newReview.customerName ||
+      !newReview.customerEmail ||
+      !newReview.comment
+    ) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("customer_name", newReview.customerName);
+      formData.append("customer_email", newReview.customerEmail);
+      formData.append("rating", newReview.rating.toString());
+      formData.append("comment", newReview.comment);
+
+      // Pass menu ID from URL params
+      const result = await submitReviewAction(formData, params.id as string);
+
+      if (result.success) {
+        toast.success(result.message);
+        // Add review to local state for immediate UI update
+        const review = {
+          id: Date.now().toString(),
+          customerName: newReview.customerName,
+          rating: newReview.rating,
+          comment: newReview.comment,
+          date: new Date().toISOString().split("T")[0],
+        };
+        setReviews([review, ...reviews]);
+        setNewReview({
+          customerName: "",
+          customerEmail: "",
+          rating: 5,
+          comment: "",
+        });
+      } else {
+        toast.error(result.error || "Failed to submit review");
+        if (result.errors) {
+          result.errors.forEach((error: string) => toast.error(error));
+        }
+      }
+    } catch (error) {
+      console.error("Review submission error:", error);
+      toast.error("Failed to submit review. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -312,7 +352,7 @@ export default function MenuItemDetailPage() {
               <form onSubmit={handleSubmitReview} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="customerName">Your Name</Label>
+                    <Label htmlFor="customerName">Your Name *</Label>
                     <Input
                       id="customerName"
                       value={newReview.customerName}
@@ -324,31 +364,50 @@ export default function MenuItemDetailPage() {
                       }
                       placeholder="Enter your name"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
-                    <Label htmlFor="rating">Rating</Label>
-                    <select
-                      id="rating"
-                      value={newReview.rating}
+                    <Label htmlFor="customerEmail">Your Email *</Label>
+                    <Input
+                      id="customerEmail"
+                      type="email"
+                      value={newReview.customerEmail}
                       onChange={(e) =>
                         setNewReview({
                           ...newReview,
-                          rating: Number(e.target.value),
+                          customerEmail: e.target.value,
                         })
                       }
-                      className="w-full p-2 border rounded-md"
-                    >
-                      {[5, 4, 3, 2, 1].map((num) => (
-                        <option key={num} value={num}>
-                          {num} Star{num !== 1 ? "s" : ""}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="Enter your email"
+                      required
+                      disabled={isSubmitting}
+                    />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="comment">Your Review</Label>
+                  <Label htmlFor="rating">Rating *</Label>
+                  <select
+                    id="rating"
+                    value={newReview.rating}
+                    onChange={(e) =>
+                      setNewReview({
+                        ...newReview,
+                        rating: Number(e.target.value),
+                      })
+                    }
+                    className="w-full p-2 border rounded-md"
+                    disabled={isSubmitting}
+                  >
+                    {[5, 4, 3, 2, 1].map((num) => (
+                      <option key={num} value={num}>
+                        {num} Star{num !== 1 ? "s" : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <Label htmlFor="comment">Your Review *</Label>
                   <Textarea
                     id="comment"
                     value={newReview.comment}
@@ -357,9 +416,12 @@ export default function MenuItemDetailPage() {
                     }
                     placeholder="Share your experience with this dish..."
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
-                <Button type="submit">Submit Review</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Submitting..." : "Submit Review"}
+                </Button>
               </form>
             </CardContent>
           </Card>
