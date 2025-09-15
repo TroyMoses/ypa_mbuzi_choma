@@ -7,7 +7,6 @@ import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { HeroSlider } from "@/components/hero-slider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -17,28 +16,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Calendar, Clock, Users } from "lucide-react";
 import { createBookingAction } from "@/lib/server-actions";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { SubmitButtonBooking } from "@/components/submit-button-reserve";
 
 const initialState = null;
-
-function SubmitButton({ pending }: { pending: boolean }) {
-  return (
-    <Button type="submit" className="w-full cursor-pointer" disabled={pending}>
-      {pending ? (
-        <>
-          <LoadingSpinner className="mr-2 h-4 w-4" />
-          Processing...
-        </>
-      ) : (
-        "Reserve Table"
-      )}
-    </Button>
-  );
-}
 
 function createBookingReducer(
   prevState: unknown,
@@ -294,7 +278,7 @@ export default function BookingPage() {
                     />
                   </div>
 
-                  <SubmitButton pending={false} />
+                  <SubmitButtonBooking />
                 </form>
               </CardContent>
             </Card>
