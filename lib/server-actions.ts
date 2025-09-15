@@ -143,10 +143,6 @@ export async function createBookingAction(formData: FormData) {
 
 export async function submitContactAction(formData: FormData) {
   try {
-    const authData = await getAuthData();
-    if (!authData) {
-      return { success: false, error: "Authentication required" };
-    }
 
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
@@ -195,12 +191,7 @@ export async function submitContactAction(formData: FormData) {
 
     const response = await fetch(`${FASTAPI_URL}/contact`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: authData.token,
-        role: authData.role,
-        is_admin: authData.is_admin.toString(),
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(contactData),
     });
 

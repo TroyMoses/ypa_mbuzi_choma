@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import { toast } from "sonner";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
@@ -16,9 +16,9 @@ import { submitContactAction } from "@/lib/server-actions";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
+const initialState = null;
 
+function SubmitButton({ pending }: { pending: boolean }) {
   return (
     <Button type="submit" className="w-full cursor-pointer" disabled={pending}>
       {pending ? (
@@ -33,8 +33,16 @@ function SubmitButton() {
   );
 }
 
+function submitContactReducer(
+  prevState: any,
+  formData: FormData
+) {
+  return submitContactAction(formData);
+}
+
 export default function ContactPage() {
-  const [state, formAction] = useFormState(submitContactAction, null);
+  const [state, formAction] = useFormState(submitContactReducer, initialState);
+
   const [formKey, setFormKey] = useState(0);
 
   useEffect(() => {
@@ -206,7 +214,7 @@ export default function ContactPage() {
                         className="cursor-pointer"
                       />
                     </div>
-                    <SubmitButton />
+                    <SubmitButton pending={false} />
                   </form>
                 </CardContent>
               </Card>
